@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
 
-export class CreateBasketItemDto {
+export class CreateBasketDto {
   @ApiProperty()
   @IsNotEmpty()
   productId: number;

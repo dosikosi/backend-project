@@ -11,8 +11,8 @@ import { Role } from 'src/role/entities/role.entity';
 @Module({
   imports: [
     ConfigModule,
-    TypeOrmModule.forFeature([UserEntity, Role]),
     BasketModule,
+    TypeOrmModule.forFeature([UserEntity, Role]),
   ],
   controllers: [UserController],
   providers: [UserService],

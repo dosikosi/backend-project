@@ -3,10 +3,10 @@ import { UserEntity } from 'src/users/entities/user.entity';
 import { Basket } from './entities/basket.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
-import { CreateBasketItemDto } from './dto/create-basket-item.dto';
+import { CreateBasketDto } from './dto/create-basket-item.dto';
 import { ProductService } from 'src/product/product.service';
 import { BasketItemEntity } from './entities/basket-item.entity';
-import { UpdateBasketItemDto } from './dto/update-basket-item.dto';
+import { UpdateBasketDto } from './dto/update-basket-item.dto';
 
 @Injectable()
 export class BasketService {
@@ -44,8 +44,8 @@ export class BasketService {
     return basket.getTotalPrice();
   }
 
-  async CreateBasketItemDto(dto: CreateBasketItemDto, user: any) {
-    const product = await this.productService.getProductById(dto.productId);
+  async CreateBasketItemDto(dto: CreateBasketDto, user: any) {
+    const product = await this.productService.findOne(dto.productId);
 
     if (!product) {
       throw new NotFoundException(
@@ -60,11 +60,10 @@ export class BasketService {
         },
       },
       where: {
-        user: user,
+        user: user.id,
       },
     });
 
-    userBasket.BasketItems.forEach((x) => x.product.title);
     // Вывод заголовка
     // Проверка на существование товара в корзине если да, то добавить, если нет вывести новый
     if (userBasket.BasketItems.some((x) => x.product.id == product.id)) {
@@ -119,7 +118,7 @@ export class BasketService {
     return product;
   }
 
-  async update(dto: UpdateBasketItemDto, user: any) {
+  async update(dto: UpdateBasketDto, user: any) {
     const userBasket = await this.basketRepository.findOne({
       relations: {
         BasketItems: {
@@ -130,7 +129,6 @@ export class BasketService {
         user: user.id,
       },
     });
-    const product = await this.productService.getProductById(dto.productId);
 
     const basketItem = await this.basketItemRepository.findOne({
       relations: {
@@ -138,10 +136,11 @@ export class BasketService {
         product: true,
       },
       where: {
-        product: { id: product.id },
-        basket: { id: userBasket.id },
+        product: await this.productService.findOne(dto.productId),
+        basket: userBasket,
       },
     });
+
     if (!basketItem) {
       throw new NotFoundException(
         'Товар с таким id не найден: ' + dto.productId,
@@ -149,7 +148,6 @@ export class BasketService {
     }
 
     basketItem.Count = dto.count;
-    basketItem.basketPrice = dto.count * basketItem.product.price;
     if (basketItem.Count == 0) {
       return await this.basketItemRepository.remove(basketItem);
     }
@@ -174,12 +172,12 @@ export class BasketService {
         product: true,
       },
       where: {
-        product: await this.productService.getProductById(productId),
+        product: await this.productService.findOne(productId),
         basket: userBasket,
       },
     });
 
-    if (!basketItem) {
+    if (!BasketItemEntity) {
       throw new NotFoundException('Не нашлось товара с таким id: ' + productId);
     }
 

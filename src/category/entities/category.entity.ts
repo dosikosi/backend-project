@@ -15,10 +15,6 @@ export class CategoryEntity {
 
   @Column()
   name: string;
-  @Column()
-  description: string;
-  @Column()
-  image: string;
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
@@ -26,4 +22,5 @@ export class CategoryEntity {
   @ApiHideProperty()
   @OneToMany(() => ProductEntity, (product) => product.category)
   products: ProductEntity[];
+  orders: any;
 }

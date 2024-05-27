@@ -3,13 +3,13 @@ import { Order } from 'src/order/entities/order.entity';
 import { Role } from 'src/role/entities/role.entity';
 import {
   Column,
+  OneToOne,
   CreateDateColumn,
   Entity,
-  JoinColumn,
-  ManyToOne,
-  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  JoinColumn,
+  ManyToOne,
 } from 'typeorm';
 
 @Entity('users')
@@ -23,9 +23,6 @@ export class UserEntity {
   @Column()
   password: string;
 
-  @Column()
-  salt: string;
-
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
 
@@ -34,6 +31,7 @@ export class UserEntity {
 
   @OneToOne(() => Order, (order) => order.user)
   order: Order;
+
   @OneToOne(() => Basket, (basket) => basket.user)
   basket: Basket;
   @ManyToOne(() => Role, (role) => role.users, { eager: true })

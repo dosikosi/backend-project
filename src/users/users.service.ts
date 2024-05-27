@@ -1,12 +1,11 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
+
+import { CreateUserDto } from './dto/create-user.dto';
 import { UserEntity } from './entities/user.entity';
 import { BasketService } from 'src/basket/basket.service';
 import { Role } from 'src/role/entities/role.entity';
-import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -26,12 +25,10 @@ export class UserService {
         `Пользователь ${dto.username} уже существует`,
       );
     }
+
     const role = await this.roleRepository.findOne({ where: { id: 2 } });
     const user = await this.userRepository.create(dto);
     user.role = role;
-    user.username = dto.username;
-    user.salt = await bcrypt.genSalt();
-    user.password = await this.hashPassword(dto.password, user.salt);
     const savedUser = await this.userRepository.save(user);
     const basket = await this.basketService.create(savedUser);
     savedUser.basket = basket;
@@ -42,8 +39,7 @@ export class UserService {
   async createadmin(): Promise<void> {
     const admin = new UserEntity();
     admin.username = 'admin';
-    admin.salt = await bcrypt.genSalt();
-    admin.password = await this.hashPassword('985631', admin.salt);
+    admin.password = '678940';
     const role = await this.roleRepository.findOne({
       where: { id: 1 },
       relations: ['users'],
@@ -55,11 +51,12 @@ export class UserService {
 
     await this.roleRepository.save(role);
   }
+
   async findByUserName(name: string): Promise<UserEntity> {
     return this.userRepository.findOneBy({ username: name });
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
+  update(id: number) {
     return `This action updates a #${id} user`;
   }
 
@@ -73,8 +70,5 @@ export class UserService {
     await this.basketService.removeBasket(req.user.id);
 
     return await this.userRepository.delete(req.user.id);
-  }
-  private async hashPassword(password: string, salt: string): Promise<string> {
-    return bcrypt.hash(password, salt);
   }
 }

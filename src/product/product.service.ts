@@ -24,12 +24,9 @@ export class ProductService {
   ): Promise<ProductEntity> {
     const product = new ProductEntity();
     product.image = image.filename;
-    product.title = dto.title;
-    product.driveUnit = dto.driveUnit;
-    product.typeEngine = dto.typeEngine;
-    product.workVoltage = dto.workVoltage;
-    product.currency = dto.currency;
+    product.name = dto.name;
     product.price = dto.price;
+    product.description = dto.description || ''; // Set description (empty string if not provided)
 
     const newProduct = await this.productRepository.save(product);
 
@@ -43,9 +40,6 @@ export class ProductService {
     await this.categoryRepository.save(category);
 
     return newProduct;
-  }
-  async getProductById(id: number) {
-    return await this.productRepository.findOneBy({ id: id });
   }
 
   async findAll(): Promise<ProductEntity[]> {
@@ -73,11 +67,7 @@ export class ProductService {
     if (!toUpdate) {
       throw new BadRequestException(`Записи с id=${id} не найдено`);
     }
-    if (dto.title) toUpdate.title = dto.title;
-    if (dto.driveUnit) toUpdate.driveUnit = dto.driveUnit;
-    if (dto.typeEngine) toUpdate.typeEngine = dto.typeEngine;
-    if (dto.workVoltage) toUpdate.workVoltage = dto.workVoltage;
-    if (dto.currency) toUpdate.currency = dto.currency;
+    if (dto.name) toUpdate.name = dto.name;
     if (dto.price) toUpdate.price = dto.price;
     if (dto.categoryId) {
       const category = await this.categoryRepository.findOne({
@@ -98,9 +88,6 @@ export class ProductService {
     }
 
     return this.productRepository.save(toUpdate);
-  }
-  findAllProduct() {
-    return this.productRepository.find();
   }
 
   async delete(id: number): Promise<DeleteResult> {

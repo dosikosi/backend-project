@@ -1,6 +1,5 @@
-import { Module } from '@nestjs/common';
+import { Module } from '@nestjs/common'; // корневой файл (контролеры провайдеоы)
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { APP_GUARD } from '@nestjs/core';
 
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { getPostgresConfig } from './configs/postgres.config';
@@ -12,8 +11,8 @@ import { AuthModule } from './auth/auth.module';
 import { BasketModule } from './basket/basket.module';
 import { OrderModule } from './order/order.module';
 import { RoleModule } from './role/role.module';
+import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './auth/guards/roles.guard';
-
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -33,6 +32,7 @@ import { RolesGuard } from './auth/guards/roles.guard';
     OrderModule,
     RoleModule,
   ],
+  controllers: [],
   providers: [
     {
       provide: APP_GUARD,

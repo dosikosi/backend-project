@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsString, IsNumberString } from 'class-validator';
+import { IsString, IsOptional, IsNumberString } from 'class-validator';
 
 export class CreateProductDto {
   @ApiProperty({
@@ -14,33 +14,21 @@ export class CreateProductDto {
   })
   image: Express.Multer.File;
 
-  // eslint-disable-next-line @typescript-eslint/no-inferrable-types
-  @IsString()
-  title: string = 'Поршневой компрессор REMEZA СБ4/С-24.OLD15';
-  // eslint-disable-next-line @typescript-eslint/no-inferrable-types
   @ApiProperty()
-  @Type(() => String)
   @IsString()
-  driveUnit: string = 'Прямой';
-  // eslint-disable-next-line @typescript-eslint/no-inferrable-types
-  @ApiProperty()
-  @Type(() => String)
-  @IsString()
-  typeEngine: string = 'Электрический';
-  // eslint-disable-next-line @typescript-eslint/no-inferrable-types
-  @ApiProperty()
-  @Type(() => String)
-  @IsString()
-  workVoltage: string = '220В';
-  @ApiProperty()
-  @Type(() => Number)
-  price: number;
-  // eslint-disable-next-line @typescript-eslint/no-inferrable-types
-  @ApiProperty()
-  @Type(() => String)
-  @IsString()
-  currency: string = '₽';
+  name: string = 'Название';
 
+  @ApiProperty()
+  @Type(() => String)
+  @IsString()
+  @IsOptional() // Make description optional
+  description?: string;
+
+  @ApiProperty()
+  @IsNumberString()
+  price: number;
+
+  @ApiProperty()
   @IsNumberString()
   categoryId: number;
 }

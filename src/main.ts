@@ -5,23 +5,22 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { RoleService } from './role/role.service';
 import { UserService } from './users/users.service';
-
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.enableCors();
+  app.enableCors({origin : ['http://localhost:3000','http://localhost:3001'],allowedHeaders:['*']});
   app.setGlobalPrefix('api');
   app.useGlobalPipes(new ValidationPipe());
-
   const roleService = app.get(RoleService);
   const useradmin = app.get(UserService);
 
-  const tableExists = await roleService.checkTableExists();
+  const tableExists = await roleService.checkTableExists(); // создание роли
   if (!tableExists) {
     await roleService.createRoles();
     await useradmin.createadmin();
   }
+
   const config = new DocumentBuilder()
-    .setTitle('School X_IT - OpenAPI 3.0')
+    .setTitle('School X - OpenAPI 3.0')
     .setDescription(
       `[The source API definition (json)](http://${process.env.SERVER}:${process.env.PORT}/api-json)`,
     )

@@ -26,8 +26,8 @@ export class OrderService {
       );
     }
     const order = await this.orderRepository.create({
-      status: dto.status,
-      shippingAddress: dto.shippingAddress,
+      Fullname: dto.Fullname,
+      deladdress: dto.deladdress,
       totalPrice: 0,
       user: req.user,
       orderItems: [],
@@ -62,8 +62,8 @@ export class OrderService {
   }
   async create(user: UserEntity, dto: CreateOrderDto) {
     const order = new Order();
-    order.status = dto.status;
-    order.shippingAddress = dto.shippingAddress;
+    order.Fullname = dto.Fullname;
+    order.deladdress = dto.deladdress;
     order.totalPrice = 0;
     order.user = user;
     await this.orderRepository.save(order);

@@ -1,9 +1,9 @@
+import { Module } from '@nestjs/common';
+import { CategoryService } from './category.service';
+import { CategoryController } from './category.controller';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CategoryEntity } from './entities/category.entity';
-import { Module } from '@nestjs/common';
-import { CategoryController } from './category.controller';
-import { CategoryService } from './category.service';
 import { JwtModule } from '@nestjs/jwt';
 
 @Module({
@@ -12,6 +12,7 @@ import { JwtModule } from '@nestjs/jwt';
     TypeOrmModule.forFeature([CategoryEntity]),
     JwtModule,
   ],
+
   controllers: [CategoryController],
   providers: [CategoryService],
 })

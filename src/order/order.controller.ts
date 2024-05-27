@@ -7,10 +7,8 @@ import {
   Get,
 } from '@nestjs/common';
 import { OrderService } from 'src/order/order.service';
-import { Order } from 'src/order/entities/order.entity';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { OrderItemEntity } from './entities/order-item.entity';
 import { CreateOrderDto } from './dto/create-order.dto';
 @ApiTags('order')
 @ApiBearerAuth()
@@ -27,4 +25,4 @@ export class OrderController {
   async getItemsFromOrder(@Request() req: any) {
     return await this.orderService.getOrdersUser(req);
   }
-} 
+}
