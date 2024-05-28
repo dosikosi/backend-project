@@ -16,6 +16,9 @@ export class CategoryEntity {
   @Column()
   name: string;
 
+  @Column()
+  menu_entry_name: string;
+
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
 

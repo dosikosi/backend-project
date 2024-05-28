@@ -44,9 +44,14 @@ export class ProductController {
     return this.productService.create(dto, image);
   }
 
+  @Get('all')
+  findAll() {
+    return this.productService.findAll();
+  }
+
   @Get()
   @ApiQuery({ name: 'categoryId', required: false })
-  findAll(@Query('categoryId') categoryId: number): Promise<ProductEntity[]> {
+  findSome(@Query('categoryId') categoryId: number): Promise<ProductEntity[]> {
     if (categoryId) return this.productService.findByCategoryId(categoryId);
     else return this.productService.findAll();
   }

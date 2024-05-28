@@ -23,6 +23,24 @@ export class ProductEntity {
   @Column()
   name: string;
 
+  @Column()
+  type: string;
+
+  @Column()
+  storage: string;
+
+  @Column()
+  composition: string;
+
+  @Column()
+  belki: number;
+
+  @Column()
+  fat: number;
+
+  @Column()
+  calory: number;
+
   @ManyToOne(() => CategoryEntity, (category) => category.products, {
     eager: true,
   })
